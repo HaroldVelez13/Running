@@ -8,6 +8,8 @@ const MIME = {
   ".html": "text/html",
   ".css": "text/css",
   ".js": "application/javascript",
+  ".xml": "application/xml",
+  ".txt": "text/plain",
 };
 
 const server = http.createServer((req, res) => {
