@@ -1,0 +1,9 @@
+{
+  "name": "running-dashboard-free",
+  "version": "1.0.0",
+  "description": "Running analytics dashboard - single page app",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js"
+  }
+}
