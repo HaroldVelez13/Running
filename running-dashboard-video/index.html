@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseRun — Product Promo</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #0a0e17;
+      font-family: "Satoshi", "Plus Jakarta Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .scene {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+    }
+
+    #scene1 {
+      z-index: 1;
+      background: #0a0e17;
+    }
+
+    #scene2 {
+      z-index: 2;
+      background: #0a0e17;
+      opacity: 0;
+    }
+
+    #scene3 {
+      z-index: 3;
+      background: #0a0e17;
+      opacity: 0;
+    }
+
+    #scene4 {
+      z-index: 4;
+      background: #0a0e17;
+      opacity: 0;
+    }
+
+    /* ── Background glows ── */
+    .glow-cyan {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.12), transparent 70%);
+      top: -200px;
+      right: -200px;
+      pointer-events: none;
+    }
+
+    .glow-lime {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(52, 211, 153, 0.1), transparent 70%);
+      bottom: -150px;
+      left: -150px;
+      pointer-events: none;
+    }
+
+    .glow-center {
+      position: absolute;
+      width: 1000px;
+      height: 1000px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.08), transparent 60%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .ghost-text {
+      position: absolute;
+      font-size: 220px;
+      font-weight: 800;
+      color: rgba(34, 211, 238, 0.04);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .ghost-text.t1 {
+      top: 60px;
+      left: -40px;
+    }
+
+    .ghost-text.t2 {
+      bottom: 80px;
+      right: -30px;
+      color: rgba(52, 211, 153, 0.035);
+    }
+
+    /* ── Scene 1: Title ── */
+    .s1-content {
+      position: absolute;
+      top: 50%;
+      left: 160px;
+      transform: translateY(-50%);
+    }
+
+    .s1-brand {
+      font-size: 28px;
+      font-weight: 500;
+      color: #22d3ee;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .s1-title {
+      font-size: 110px;
+      font-weight: 800;
+      color: #e4e8f0;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .s1-title .highlight {
+      background: linear-gradient(135deg, #22d3ee, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .s1-subtitle {
+      font-size: 28px;
+      font-weight: 400;
+      color: #8891a5;
+      letter-spacing: 0.02em;
+    }
+
+    .s1-accent-line {
+      width: 120px;
+      height: 3px;
+      background: linear-gradient(90deg, #22d3ee, #34d399);
+      border-radius: 2px;
+      margin-top: 32px;
+    }
+
+    .s1-meta {
+      position: absolute;
+      bottom: 60px;
+      right: 80px;
+      text-align: right;
+    }
+
+    .s1-meta-line {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(34, 211, 238, 0.3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* ── Scene 2: Metric Cards ── */
+    .s2-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 40px;
+    }
+
+    .metric-card {
+      width: 380px;
+      padding: 40px 36px;
+      background: rgba(18, 26, 40, 0.7);
+      border: 1px solid rgba(34, 211, 238, 0.12);
+      border-radius: 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .metric-card .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-size: 22px;
+    }
+
+    .metric-card .card-icon.cyan {
+      background: rgba(34, 211, 238, 0.12);
+      color: #22d3ee;
+    }
+
+    .metric-card .card-icon.lime {
+      background: rgba(52, 211, 153, 0.12);
+      color: #34d399;
+    }
+
+    .metric-card .card-icon.purple {
+      background: rgba(168, 130, 255, 0.12);
+      color: #a882ff;
+    }
+
+    .metric-card .card-value {
+      font-size: 52px;
+      font-weight: 700;
+      color: #e4e8f0;
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-card .card-value .unit {
+      font-size: 24px;
+      font-weight: 500;
+      color: #8891a5;
+      font-family: "Satoshi", "Plus Jakarta Sans", sans-serif;
+      margin-left: 4px;
+    }
+
+    .metric-card .card-label {
+      font-size: 18px;
+      font-weight: 500;
+      color: #8891a5;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .metric-card .card-sub {
+      font-size: 15px;
+      color: rgba(34, 211, 238, 0.5);
+      margin-top: 12px;
+      font-weight: 400;
+    }
+
+    .metric-card .card-sub.lime {
+      color: rgba(52, 211, 153, 0.5);
+    }
+
+    /* ── Scene 3: Bar Chart ── */
+    .s3-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1200px;
+    }
+
+    .s3-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+    }
+
+    .s3-header-left .s3-label {
+      font-size: 20px;
+      font-weight: 500;
+      color: #8891a5;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .s3-header-left .s3-title {
+      font-size: 48px;
+      font-weight: 700;
+      color: #e4e8f0;
+      letter-spacing: -0.02em;
+    }
+
+    .s3-header-right {
+      text-align: right;
+    }
+
+    .s3-header-right .s3-total {
+      font-size: 44px;
+      font-weight: 700;
+      color: #22d3ee;
+      font-family: "JetBrains Mono", monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .s3-header-right .s3-total-label {
+      font-size: 16px;
+      color: #8891a5;
+      font-weight: 400;
+    }
+
+    .chart-area {
+      position: relative;
+      height: 320px;
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      padding: 0 10px;
+    }
+
+    .chart-grid-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(34, 211, 238, 0.06);
+    }
+
+    .chart-bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .chart-bar {
+      width: 100%;
+      max-width: 100px;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, #22d3ee, rgba(34, 211, 238, 0.3));
+      min-height: 4px;
+      transform-origin: bottom center;
+    }
+
+    .chart-bar:nth-child(3) .chart-bar {
+      background: linear-gradient(180deg, #34d399, rgba(52, 211, 153, 0.3));
+    }
+
+    .chart-bar-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: #5a6378;
+      font-family: "JetBrains Mono", monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chart-bar-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #22d3ee;
+      font-family: "JetBrains Mono", monospace;
+      font-variant-numeric: tabular-nums;
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+    }
+
+    .chart-bar-wrap {
+      position: relative;
+    }
+
+    /* ── Scene 4: Final Logo ── */
+    .s4-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .s4-logo-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 32px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #22d3ee, #34d399);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: #0a0e17;
+      font-weight: 800;
+    }
+
+    .s4-title {
+      font-size: 72px;
+      font-weight: 800;
+      color: #e4e8f0;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .s4-tagline {
+      font-size: 24px;
+      font-weight: 400;
+      color: #8891a5;
+      letter-spacing: 0.04em;
+    }
+
+    .s4-accent-line {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, #22d3ee, #34d399);
+      border-radius: 1px;
+      margin: 24px auto 0;
+    }
+
+    .s4-meta {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(34, 211, 238, 0.25);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* ── Transition overlay ── */
+    .transition-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 1080px;
+      z-index: 20;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div
+    id="root"
+    data-composition-id="pulserun-promo"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="10"
+  >
+    <!-- ══════ Scene 1: Title Reveal (0-2s) ══════ -->
+    <div id="scene1" class="scene">
+      <div class="glow-cyan"></div>
+      <div class="glow-lime"></div>
+      <div class="ghost-text t1">PULSERUN</div>
+      <div class="ghost-text t2">ANALYTICS</div>
+
+      <div class="s1-content">
+        <div class="s1-brand">PulseRun Analytics</div>
+        <h1 class="s1-title">
+          Every<br><span class="highlight">Stride</span><br>Counts
+        </h1>
+        <p class="s1-subtitle">Real-time running intelligence</p>
+        <div class="s1-accent-line"></div>
+      </div>
+
+      <div class="s1-meta">
+        <div class="s1-meta-line">Precision · Performance · Progress</div>
+      </div>
+    </div>
+
+    <!-- ══════ Scene 2: Metric Cards (2-6s) ══════ -->
+    <div id="scene2" class="scene">
+      <div class="glow-center"></div>
+      <div class="ghost-text t1" style="font-size:180px;top:40px;left:auto;right:-60px">METRICS</div>
+
+      <div class="s2-content">
+        <div class="metric-card" id="card-1">
+          <div class="card-icon cyan">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2"/><path d="M6 8h2"/><path d="M10 16h2"/><path d="M14 4h2"/><path d="M18 20h2"/></svg>
+          </div>
+          <div class="card-value">68.4<span class="unit">km</span></div>
+          <div class="card-label">Weekly Distance</div>
+          <div class="card-sub">▲ 12% vs last week</div>
+        </div>
+
+        <div class="metric-card" id="card-2">
+          <div class="card-icon lime">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="card-value">4:32<span class="unit">/km</span></div>
+          <div class="card-label">Average Pace</div>
+          <div class="card-sub lime">▼ Best effort zone</div>
+        </div>
+
+        <div class="metric-card" id="card-3">
+          <div class="card-icon purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="card-value">145<span class="unit">bpm</span></div>
+          <div class="card-label">Avg Heart Rate</div>
+          <div class="card-sub" style="color:rgba(168,130,255,0.5)">Zone 2–4 · 85% in target</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ Scene 3: Bar Chart (6-9s) ══════ -->
+    <div id="scene3" class="scene">
+      <div class="glow-lime" style="width:600px;height:600px;bottom:-100px;left:auto;right:-100px"></div>
+      <div class="ghost-text t2" style="font-size:160px;bottom:40px;left:-40px;right:auto">TRENDS</div>
+
+      <div class="s3-content">
+        <div class="s3-header">
+          <div class="s3-header-left">
+            <div class="s3-label">Weekly Distance</div>
+            <div class="s3-title">Training Volume</div>
+          </div>
+          <div class="s3-header-right">
+            <div class="s3-total">232.1</div>
+            <div class="s3-total-label">km this period</div>
+          </div>
+        </div>
+
+        <div class="chart-area" id="chartArea">
+          <div class="chart-grid-line" style="bottom:0%"></div>
+          <div class="chart-grid-line" style="bottom:25%"></div>
+          <div class="chart-grid-line" style="bottom:50%"></div>
+          <div class="chart-grid-line" style="bottom:75%"></div>
+
+          <div class="chart-bar-wrap" data-week="W1">
+            <div class="chart-bar" style="height:42%"></div>
+            <span class="chart-bar-label">W1</span>
+            <span class="chart-bar-value">28.4</span>
+          </div>
+          <div class="chart-bar-wrap" data-week="W2">
+            <div class="chart-bar" style="height:56%"></div>
+            <span class="chart-bar-label">W2</span>
+            <span class="chart-bar-value">38.2</span>
+          </div>
+          <div class="chart-bar-wrap" data-week="W3">
+            <div class="chart-bar" style="height:35%"></div>
+            <span class="chart-bar-label">W3</span>
+            <span class="chart-bar-value">24.0</span>
+          </div>
+          <div class="chart-bar-wrap" data-week="W4">
+            <div class="chart-bar" style="height:68%"></div>
+            <span class="chart-bar-label">W4</span>
+            <span class="chart-bar-value">46.5</span>
+          </div>
+          <div class="chart-bar-wrap" data-week="W5">
+            <div class="chart-bar" style="height:74%"></div>
+            <span class="chart-bar-label">W5</span>
+            <span class="chart-bar-value">50.8</span>
+          </div>
+          <div class="chart-bar-wrap" data-week="W6">
+            <div class="chart-bar" style="height:63%"></div>
+            <span class="chart-bar-label">W6</span>
+            <span class="chart-bar-value">44.2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ Scene 4: Final Logo (9-10s) ══════ -->
+    <div id="scene4" class="scene">
+      <div class="glow-center" style="background:radial-gradient(circle,rgba(34,211,238,0.1),transparent 60%)"></div>
+
+      <div class="s4-content">
+        <div class="s4-logo-icon">PR</div>
+        <div class="s4-title">PulseRun</div>
+        <p class="s4-tagline">Track every stride. Own every mile.</p>
+        <div class="s4-accent-line"></div>
+      </div>
+
+      <div class="s4-meta">pulserun.app</div>
+    </div>
+
+    <!-- ══════ Transition Overlay ══════ -->
+    <div id="transitionOverlay" class="transition-overlay"></div>
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+
+    // ── Scene 1: Title Reveal (0-2s) ──
+
+    // Ghost text ambient drift
+    tl.fromTo(".ghost-text.t1", { y: 0 }, { y: -12, duration: 10, ease: "sine.inOut" }, 0);
+    tl.fromTo(".ghost-text.t2", { y: 0 }, { y: 10, duration: 8, ease: "sine.inOut" }, 0);
+
+    // Background glow breathe
+    tl.fromTo(".glow-cyan", { scale: 1 }, { scale: 1.08, duration: 4, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0);
+
+    // Brand label
+    tl.fromTo("#scene1 .s1-brand", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.2);
+
+    // Title lines (staggered)
+    tl.fromTo("#scene1 .s1-title", { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 0.3);
+    tl.fromTo("#scene1 .s1-title .highlight", { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }, 0.5);
+
+    // Subtitle
+    tl.fromTo("#scene1 .s1-subtitle", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 0.6);
+
+    // Accent line draw
+    tl.fromTo("#scene1 .s1-accent-line", { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 0.7);
+
+    // Meta line
+    tl.fromTo("#scene1 .s1-meta-line", { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 0.9);
+
+    // ── Transition: Scene 1 → Scene 2 (2.0s) ──
+    // Blur crossfade at 2.0s
+    tl.to("#scene1", { filter: "blur(16px)", duration: 0.35, ease: "power2.in" }, 1.8);
+    tl.to("#transitionOverlay", { opacity: 0.6, duration: 0.2 }, 1.8);
+    tl.set("#scene2", { opacity: 1 }, 2.0);
+    tl.set("#transitionOverlay", { opacity: 0 }, 2.0);
+    tl.set("#scene1", { filter: "blur(0px)" }, 2.0);
+
+    // ── Scene 2: Metric Cards (2-6s) ──
+
+    // Background glow (shifted)
+    tl.fromTo(".glow-center", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8, ease: "expo.out" }, 2.0);
+
+    // Card 1: from left
+    tl.fromTo("#card-1", { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 2.2);
+
+    // Card 2: from bottom with scale
+    tl.fromTo("#card-2", { y: 60, scale: 0.92, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.4)" }, 2.5);
+
+    // Card 3: from right
+    tl.fromTo("#card-3", { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 2.8);
+
+    // Card icon stagger
+    tl.fromTo(".card-icon", { scale: 0, rotation: -15 }, { scale: 1, rotation: 0, duration: 0.4, ease: "back.out(2)" }, 2.3);
+
+    // Count-up effect via tl.from
+    tl.fromTo("#card-1 .card-value", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 }, 2.5);
+    tl.fromTo("#card-2 .card-value", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 }, 2.7);
+    tl.fromTo("#card-3 .card-value", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 }, 2.9);
+
+    // Labels
+    tl.fromTo(".card-label", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 2.8);
+    tl.fromTo(".card-sub", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 3.0);
+
+    // ── Transition: Scene 2 → Scene 3 (6.0s) ──
+    tl.to("#scene2", { filter: "blur(16px)", duration: 0.35, ease: "power2.in" }, 5.8);
+    tl.to("#transitionOverlay", { opacity: 0.6, duration: 0.2 }, 5.8);
+    tl.set("#scene3", { opacity: 1 }, 6.0);
+    tl.set("#transitionOverlay", { opacity: 0 }, 6.0);
+    tl.set("#scene2", { filter: "blur(0px)" }, 6.0);
+
+    // ── Scene 3: Bar Chart (6-9s) ──
+
+    // Header
+    tl.fromTo("#scene3 .s3-label", { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 6.2);
+    tl.fromTo("#scene3 .s3-title", { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 6.3);
+
+    // Total stat
+    tl.fromTo("#scene3 .s3-total", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.5)" }, 6.4);
+    tl.fromTo("#scene3 .s3-total-label", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 6.5);
+
+    // Grid lines (draw in)
+    tl.fromTo(".chart-grid-line", { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 6.3);
+
+    // Bars stagger from bottom
+    var bars = document.querySelectorAll("#scene3 .chart-bar");
+    bars.forEach(function(bar, i) {
+      var h = bar.style.height;
+      tl.set(bar, { height: 0 }, 6.5 + i * 0.1);
+      tl.to(bar, { height: h, duration: 0.4, ease: "back.out(1.2)" }, 6.5 + i * 0.1);
+    });
+
+    // Bar labels fade in
+    tl.fromTo(".chart-bar-label", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, 6.8);
+
+    // Bar values pop in
+    tl.fromTo(".chart-bar-value", { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.1 }, 7.2);
+
+    // ── Transition: Scene 3 → Scene 4 (9.0s) ──
+    tl.to("#scene3", { filter: "blur(16px)", duration: 0.35, ease: "power2.in" }, 8.8);
+    tl.to("#transitionOverlay", { opacity: 0.6, duration: 0.2 }, 8.8);
+    tl.set("#scene4", { opacity: 1 }, 9.0);
+    tl.set("#transitionOverlay", { opacity: 0 }, 9.0);
+    tl.set("#scene3", { filter: "blur(0px)" }, 9.0);
+
+    // ── Scene 4: Final Logo (9-10s) ──
+
+    // Logo icon
+    tl.fromTo(".s4-logo-icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.7)" }, 9.1);
+
+    // Title
+    tl.fromTo(".s4-title", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 9.2);
+
+    // Tagline
+    tl.fromTo(".s4-tagline", { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, 9.4);
+
+    // Accent line
+    tl.fromTo(".s4-accent-line", { scaleX: 0, transformOrigin: "center center" }, { scaleX: 1, duration: 0.4, ease: "expo.out" }, 9.5);
+
+    // Meta
+    tl.fromTo(".s4-meta", { y: -10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 9.6);
+
+    // Final fade to black (last 0.3s)
+    tl.to("#scene4", { opacity: 0, duration: 0.3, ease: "power2.in" }, 9.7);
+    tl.set("#scene4", { visibility: "hidden" }, 10.0);
+    tl.to("#transitionOverlay", { opacity: 1, backgroundColor: "#0a0e17", duration: 0.3 }, 9.7);
+
+    window.__timelines["pulserun-promo"] = tl;
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "pulserun-promo",
+  "private": true,
+  "scripts": {
+    "preview": "npx hyperframes preview",
+    "render": "npx hyperframes render --output pulserun-promo.mp4",
+    "lint": "npx hyperframes lint",
+    "validate": "npx hyperframes validate"
+  }
+}
